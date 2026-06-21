@@ -10,6 +10,27 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 
+RAW_FILES = [
+    "processed.cleveland.data", "processed.hungarian.data",
+    "processed.switzerland.data", "processed.va.data",
+]
+RAW_COLUMNS = ["age","sex","cp","trestbps","chol","fbs","restecg",
+               "thalach","exang","oldpeak","slope","ca","thal","target"]
+
+def load_raw_data(data_dir=None):
+    """data/ 폴더의 원본 4개 파일을 읽어 통합본(920행) 반환. 타깃은 0/1로 이진화."""
+    from pathlib import Path
+    if data_dir is None:
+        # 이 파일 기준 프로젝트 루트의 data 폴더 (어디서 실행하든 동작)
+        data_dir = Path(__file__).resolve().parent.parent / "data"
+    data_dir = Path(data_dir)
+    frames = [pd.read_csv(data_dir / f, header=None, names=RAW_COLUMNS, na_values="?")
+              for f in RAW_FILES]
+    df = pd.concat(frames, ignore_index=True)
+    df = df.apply(pd.to_numeric, errors="coerce")
+    df["target"] = (df["target"] > 0).astype(int)
+    return df
+
 # 0이 생리학적으로 불가능한 컬럼 (숨은 결측)
 ZERO_AS_MISSING = ["chol", "trestbps"]
 

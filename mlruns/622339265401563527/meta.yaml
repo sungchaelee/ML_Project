@@ -1,0 +1,9 @@
+artifact_location: file:///C:/MLProject/ML_Project/mlruns/622339265401563527
+creation_time: 1782056251098
+effective_trace_archival_retention: null
+experiment_id: '622339265401563527'
+last_update_time: 1782056251098
+lifecycle_stage: active
+name: CardioCare
+trace_location: null
+workspace: default
