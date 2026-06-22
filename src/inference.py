@@ -1,5 +1,5 @@
 """
-CardioCare 추론 모듈 (§5.3 + §5.4 로깅)
+CardioCare 추론 모듈
 실행: python src/inference.py <입력CSV경로>
 """
 import sys
@@ -22,7 +22,7 @@ FEATURE_RANGES = {
 
 
 def get_logger():
-    """logs/inference.log 파일에 기록하는 로거 (한 번만 설정)."""
+    """logs/inference.log 파일에 기록하는 로거."""
     log_dir = Path(__file__).resolve().parent.parent / "logs"
     log_dir.mkdir(exist_ok=True)
     logger = logging.getLogger("cardiocare_inference")

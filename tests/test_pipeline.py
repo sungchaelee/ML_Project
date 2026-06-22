@@ -14,7 +14,6 @@ from inference import validate_input_ranges
 class TestPipeline(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # 테스트용 모델을 데이터로 한 번만 학습
         df = clean_data(load_raw_data())
         cls.X = df.drop(columns=TARGET)
         cls.y = df[TARGET]
@@ -38,7 +37,7 @@ class TestPipeline(unittest.TestCase):
     def test_input_range_validation(self):
         """임상 범위(chol 0~600)를 벗어난 입력을 잡아내는가."""
         bad = self.sample.copy()
-        bad.loc[bad.index[0], "chol"] = 9999  # 범위 밖 값
+        bad.loc[bad.index[0], "chol"] = 9999
         issues = validate_input_ranges(bad)
         self.assertIn("chol", issues)
 

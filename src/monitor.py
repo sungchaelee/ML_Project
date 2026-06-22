@@ -1,5 +1,5 @@
 """
-CardioCare 모니터링 & 드리프트 탐지 (§5.4)
+CardioCare 모니터링 & 드리프트 탐지
 실행: python src/monitor.py
 """
 import matplotlib
@@ -24,10 +24,8 @@ CONTINUOUS = ["age", "trestbps", "chol", "thalach", "oldpeak"]
 
 def make_drifted(X):
     d = X.copy()
-    # chol: 평균 +50, 분산 1.5배 (PDF 예시: 평균 이동 + 분산 증가)
     m = d["chol"].mean()
     d["chol"] = m + (d["chol"] - m) * 1.5 + 50
-    # 성능 저하를 확실히 보이도록 다른 연속형도 함께 이동
     d["thalach"] = d["thalach"] - 25
     d["oldpeak"] = d["oldpeak"] + 1.5
     return d
@@ -54,7 +52,7 @@ def drift_timeseries(model, X_test, y_test, save_path):
         d["thalach"] = d["thalach"] - 25 * factor
         d["oldpeak"] = d["oldpeak"] + 1.5 * factor
         scores.append(balanced_accuracy_score(y_test, predict(d, model)))
-        timestamps.append(base + timedelta(weeks=i))   # 매주 합성 타임스탬프
+        timestamps.append(base + timedelta(weeks=i)) 
 
     plt.figure(figsize=(8, 4))
     plt.plot(timestamps, scores, marker="o", color="steelblue")

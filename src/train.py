@@ -1,9 +1,9 @@
 """
-CardioCare 모델 학습 (§5.2)
+CardioCare 모델 학습
 실행: python src/train.py
 """
 import os
-os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"  # 파일 기반 mlruns/ 허용 (최신 MLflow 대응)
+os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
 import logging
 logging.getLogger("mlflow").setLevel(logging.ERROR)
 import sys
@@ -35,7 +35,7 @@ RANDOM_STATE = 42
 def make_pipeline(clf, scale=True):
     """대치 → (스케일링) → 특성선택 → 모델. 전부 train에만 fit → 누수 방지."""
     steps = [("preprocess", build_preprocessor())]
-    if scale:                                    # 트리 모델은 스케일링 불필요
+    if scale:                                    
         steps.append(("scale", StandardScaler()))
     steps.append(("select", SelectFromModel(
         RandomForestClassifier(n_estimators=200, random_state=RANDOM_STATE),
@@ -88,7 +88,6 @@ def main():
             metrics = evaluate(y_test, y_pred)
             cm = confusion_matrix(y_test, y_pred)
 
-            # 선택된 특성 추출
             feat_names = pipe.named_steps["preprocess"].get_feature_names_out()
             mask = pipe.named_steps["select"].get_support()
             selected = [f for f, m in zip(feat_names, mask) if m]
@@ -138,7 +137,7 @@ def main():
     print("Confusion matrix [[TN FP],[FN TP]]:\n", cm)
     print(f"False Negatives: {cm[1, 0]}")
 
-    # MLflow에 최종 모델 기록 (final_model 태그)
+    # MLflow에 최종 모델 기록
     with mlflow.start_run(run_name="svc_tuned_final"):
         mlflow.set_tag("model_family", "svc")
         mlflow.set_tag("final_model", "true")
@@ -148,7 +147,7 @@ def main():
         mlflow.log_metric("false_negatives", int(cm[1, 0]))
         mlflow.sklearn.log_model(best_model, name="model", serialization_format="cloudpickle")
 
-    # 최종 모델을 파일로 저장 (이후 추론·Docker에서 사용)
+    # 최종 모델을 파일로 저장
     model_path = Path(__file__).resolve().parent.parent / "models" / "final_model.pkl"
     model_path.parent.mkdir(exist_ok=True)
     joblib.dump(best_model, model_path)

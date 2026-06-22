@@ -3,7 +3,7 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# 1) 의존성 먼저 설치 (레이어 캐시 활용)
+# 1) 의존성 먼저 설치
 COPY requirements-inference.txt .
 RUN pip install --no-cache-dir -r requirements-inference.txt
 

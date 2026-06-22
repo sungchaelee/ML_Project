@@ -38,7 +38,7 @@ Python 3.12 권장 (3.10+).
 git clone <저장소 URL>
 cd <저장소>
 
-# (권장) 가상환경
+# 가상환경
 python -m venv .venv
 # Windows: .venv\Scripts\Activate.ps1
 # Mac/Linux: source .venv/bin/activate

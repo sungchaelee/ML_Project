@@ -1,5 +1,5 @@
 """
-CardioCare 전처리 모듈 (§5.1)
+CardioCare 전처리 모듈
 
 - clean_data():       데이터에서 '학습'하지 않는 결정론적 정리 (누수 안전)
 - build_preprocessor(): 결측 대치 sklearn 파이프라인 (train에만 fit → 누수 방지)
@@ -21,7 +21,6 @@ def load_raw_data(data_dir=None):
     """data/ 폴더의 원본 4개 파일을 읽어 통합본(920행) 반환. 타깃은 0/1로 이진화."""
     from pathlib import Path
     if data_dir is None:
-        # 이 파일 기준 프로젝트 루트의 data 폴더 (어디서 실행하든 동작)
         data_dir = Path(__file__).resolve().parent.parent / "data"
     data_dir = Path(data_dir)
     frames = [pd.read_csv(data_dir / f, header=None, names=RAW_COLUMNS, na_values="?")
@@ -34,7 +33,7 @@ def load_raw_data(data_dir=None):
 # 0이 생리학적으로 불가능한 컬럼 (숨은 결측)
 ZERO_AS_MISSING = ["chol", "trestbps"]
 
-# 과반 결측이라 드롭하는 컬럼
+# 과반 결측이라 드롭
 DROP_COLS = ["ca", "thal"]
 
 # 대치 전략별 특성 그룹 (ca, thal 드롭 후 기준)
@@ -54,13 +53,13 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         if col in df.columns:
             df[col] = df[col].replace(0, np.nan)
 
-    # 2) 중복 행 제거 (같은 행이 train/test 양쪽에 들어가는 누수도 예방)
+    # 2) 중복 행 제거
     df = df.drop_duplicates().reset_index(drop=True)
 
     # 3) 고결측 컬럼 드롭
     df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
 
-    # 4) 빈(전부 NaN)/상수(값 1개) 컬럼 제거 (타깃은 보호)
+    # 4) 빈(전부 NaN)/상수(값 1개) 컬럼 제거 (타깃 보호)
     for col in list(df.columns):
         if col == TARGET:
             continue
@@ -72,9 +71,9 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
 def build_preprocessor() -> ColumnTransformer:
     """결측 대치 파이프라인 (아직 fit 안 함).
-    - 연속형: 중앙값(median)  → 이상치에 robust
-    - 범주/이진형: 최빈값(most_frequent)
-    실제 fit은 §5.2에서 '학습 데이터에만' 수행 → 데이터 누수 방지.
+    - 연속형: 중앙값  → 이상치에 robust
+    - 범주/이진형: 최빈값
+    실제 fit은 '학습 데이터에만' 수행 → 데이터 누수 방지.
     """
     continuous_pipe = Pipeline([
         ("impute", SimpleImputer(strategy="median")),
@@ -88,6 +87,6 @@ def build_preprocessor() -> ColumnTransformer:
             ("num", continuous_pipe, CONTINUOUS_FEATURES),
             ("cat", categorical_pipe, CATEGORICAL_FEATURES),
         ],
-        remainder="drop",  # 명시한 컬럼만 사용
+        remainder="drop",
     )
     return preprocessor
