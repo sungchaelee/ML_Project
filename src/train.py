@@ -11,6 +11,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent))
 
 import pandas as pd
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 200)
 import mlflow
 import mlflow.sklearn
 

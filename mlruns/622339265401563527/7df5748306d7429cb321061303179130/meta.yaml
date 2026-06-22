@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/MLProject/ML_Project/mlruns/622339265401563527/7df5748306d7429cb321061303179130/artifacts
+end_time: 1782126911052
+entry_point_name: ''
+experiment_id: '622339265401563527'
+lifecycle_stage: active
+run_id: 7df5748306d7429cb321061303179130
+run_name: svc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1782126906424
+status: 3
+tags: []
+user_id: sungg

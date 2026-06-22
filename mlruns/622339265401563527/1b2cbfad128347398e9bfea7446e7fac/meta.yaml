@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/MLProject/ML_Project/mlruns/622339265401563527/1b2cbfad128347398e9bfea7446e7fac/artifacts
+end_time: 1782126744079
+entry_point_name: ''
+experiment_id: '622339265401563527'
+lifecycle_stage: active
+run_id: 1b2cbfad128347398e9bfea7446e7fac
+run_name: logistic_regression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1782126735299
+status: 3
+tags: []
+user_id: sungg
